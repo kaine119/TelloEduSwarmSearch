@@ -19,6 +19,13 @@ with FlyTello(search_tellos) as fly:
     fly.takeoff()
     fly.reorient(height=100, pad='m-2')
     with fly.individual_behaviours():
-        fly.run_individual(grid_search, tello=search_tellos[0], pad='m3', fly=fly, grid_width=2, grid_length=5)
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=search_tellos[0],
+            pad='m3',
+            grid_width=2,
+            grid_length=5
+        )
     fly.reorient(height=100, pad='m-2')
     fly.land()

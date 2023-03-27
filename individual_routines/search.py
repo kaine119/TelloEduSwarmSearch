@@ -5,23 +5,23 @@ def generate_grid(length, width):
     """
     Generate a grid pattern to pass to `fly.search_pattern`.
 
-    :param length: Forward distance the drone will search across.
-    :param width: Sideways distance (rightwards) the drone will search across.
+    :param length: Leftward distance (relative to starting) the drone will search across.
+    :param width: Forwards distance (relative to starting) the drone will search across.
 
     Along the drawn map, `length` is along the letter axis, `width` is along the number axis.
     """
     res = []
     for row in range(length):
         for column in range(width - 1):
-            res.append((0, -1 if row % 2 == 0 else 1))  # right, then left
+            res.append((1 if row % 2 == 0 else -1, 0))  # right, then left
         if row != length - 1:
-            res.append((1, 0))
-            if row == 0:
+            res.append((0, 1))
+            if row == 1:
                 res.append(None)
     return res
 
 
-def grid_search(tello, pad, fly, grid_length, grid_width):
+def grid_search(fly, tello, pad, grid_length, grid_width):
     """
     Perform a grid search independently. Should be executed in a separate thread with
     `fly.run_individual`.
@@ -46,10 +46,11 @@ def grid_search(tello, pad, fly, grid_length, grid_width):
         fly.land(tello=tello)
     else:
         print('[Grid Search] Bopes, going back home')
-        fly.straight(-grid_length * 100,
-                     grid_width * 100 if grid_length % 2 != 0 else 0,
-                     0,
-                     50,
-                     tello=tello
-                     )
+        fly.straight(
+            grid_width * 100 if grid_length % 2 != 0 else 0,
+            -grid_length * 100,
+            0,
+            50,
+            tello=tello
+        )
         fly.reorient(height=100, pad='m-2')
