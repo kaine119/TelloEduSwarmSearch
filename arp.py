@@ -35,7 +35,7 @@ test_macs = [
 ]
 
 
-def find_ips_by_mac(target_macs: List[str]) -> dict[str, str]:
+def find_ips_by_mac(test_numbers: List[int]) -> dict[str, str]:
     """
     Returns a map of MAC addresses to IPs.
     """
@@ -43,11 +43,11 @@ def find_ips_by_mac(target_macs: List[str]) -> dict[str, str]:
     ips = {}
     num = 0
     print(found_clients)
-    for mac in target_macs:
+    for number, mac in zip(test_numbers, get_mac_addr_from_num(test_numbers)):
         mac = mac.lower()
         if found_clients.get(mac) is None:
             num += 1
-            raise RuntimeError(f"MAC address not found: {mac}")
+            print(f"Drone not found: {number}")
         else:
             ips[mac] = found_clients[mac]
     print(f"{num} drones not found")
