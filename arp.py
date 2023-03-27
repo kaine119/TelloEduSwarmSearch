@@ -3,39 +3,40 @@ from datetime import datetime
 from typing import List
 from scapy.all import srp, Ether, ARP, conf
 
+from serial_mapper import get_mac_addr_from_num
+
 # Last 3 bytes of the MAC address of each Tello.
 # Identified by the SSID printed on the
 # back of the head unit (RMTT-______)
 # Separate every 2 characters with a colon.
 test_macs = [
-    # "10:9b:b4",
-    # "f2:48:dc",
-    # "d3:91:ca",
-    # "9a:ec:c6",
-    # "33:14:9c",
-    # "d2:71:04",
-    # "9b:6f:6c",
-    # "9a:ec:dc",
-    # "10:b1:7c",
-    # "10:ac:0a",
-    # "33:21:26",
-    # "33:14:9a",
-    # "f2:3b:1a",
-    # "33:09:aa",
-    # "10:a9:9c",
-    "33:21:26",
-    "9b:6f:6c",
-    "33:14:9c",
-    "10:9b:b4",
-    "d3:91:ca",
-    "d2:71:04",
-    "10:b1:7c",
-    "33:14:9a",
-    "f2:43:0e",
+    7,
+    8,
+    9,
+    10
 ]
 
 
-def find_ips_by_mac(test_numbers: List[int]) -> dict[str, str]:
+def find_ips_by_mac(target_macs: List[str]) -> dict[str, str]:
+    """
+    Returns a map of MAC addresses to IPs.
+    """
+    found_clients = arp_scan()
+    ips = {}
+    num = 0
+    print(found_clients)
+    for mac in target_macs:
+        mac = mac.lower()
+        if found_clients.get(mac) is None:
+            num += 1
+            print(f"Drone not found: {mac}")
+        else:
+            ips[mac] = found_clients[mac]
+    print(f"{num} drones not found")
+    return ips
+
+
+def find_ips_by_number(test_numbers: List[int]) -> dict[str, str]:
     """
     Returns a map of MAC addresses to IPs.
     """
@@ -70,5 +71,5 @@ def arp_scan():
 
 
 if __name__ == "__main__":
-    ips = find_ips_by_mac(test_macs)
+    ips = find_ips_by_number(test_macs)
     print(ips)
