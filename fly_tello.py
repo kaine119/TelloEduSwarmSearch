@@ -19,7 +19,7 @@ class FlyTello:
     # CLASS INITIALISATION AND CONTEXT HANDLER
     #
 
-    def __init__(self, tello_sn_list: list, get_status=False, first_ip: int=1, last_ip: int=254):
+    def __init__(self, mac_list: list, get_status=False, first_ip: int=1, last_ip: int=254):
         """ Initiate FlyTello, starting up CommsManager, finding and initialising our Tellos, and reporting battery.
 
             :param tello_sn_list: List of serial numbers, in the order we want to number the Tellos.
@@ -27,7 +27,7 @@ class FlyTello:
             :param last_ip: Optionally, we can specify a smaller range of IP addresses to speed up the search.
         """
         self.tello_mgr = CommsManager()
-        self.tello_mgr.init_tellos(sn_list=tello_sn_list, get_status=get_status, first_ip=first_ip, last_ip=last_ip)
+        self.tello_mgr.init_tellos(mac_list=mac_list, get_status=get_status, first_ip=first_ip, last_ip=last_ip)
         self.tello_mgr.queue_command('battery?', 'Read', 'All')
         self.individual_behaviour_threads = []
         self.in_sync_these = False

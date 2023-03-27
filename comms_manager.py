@@ -4,6 +4,7 @@ import netaddr
 import threading
 import time
 from tello import Tello
+from arp import find_ips_by_mac, find_ips_by_mac
 
 
 class CommsManager:
@@ -39,7 +40,7 @@ class CommsManager:
         # Reference to all active Tellos
         self.tellos = []
 
-    def init_tellos(self, sn_list, get_status=False, first_ip=1, last_ip=254):
+    def init_tellos(self, mac_list, get_status=False, first_ip=1, last_ip=254):
         """ Search the network until found the specified number of Tellos, then get each Tello ready for use.
 
             This must be run once; generally the first thing after initiating CommsManager.
@@ -48,7 +49,7 @@ class CommsManager:
             A command_handler is then created for each, which manages the command_queue for each.
             Finally, each Tello is queried for its serial number, which is stored in the Tello object with its number.
 
-            :param sn_list: List of serial numbers, in order we want to number the Tellos.
+            :param mac_list: List of the last 3 digits of the MAC, in order we want to number the Tellos.
             :param get_status: True to listen for and record the status messages from the Tellos.
             :param first_ip: If known, we can specify a smaller range of IP addresses to speed up the search.
             :param last_ip: If known, we can specify a smaller range of IP addresses to speed up the search.
@@ -56,31 +57,26 @@ class CommsManager:
 
         # Get network addresses to search
         subnets, address = self._get_subnets()
-        possible_addr = []
 
         # Create a list of possible IP addresses to search
-        for subnet, netmask in subnets:
-            for ip in netaddr.IPNetwork('%s/%s' % (subnet, netmask)):
-                if not (first_ip <= int(str(ip).split('.')[3]) <= last_ip):
-                    continue
-                # Don't add the server's address to the list
-                if str(ip) in address:
-                    continue
-                possible_addr.append(str(ip))
+        # Run an ARP scan to grab IP-MAC associations.
+        ip_by_macs = find_ips_by_mac(target_macs=mac_list)
+        possible_addr = list(ip_by_macs.values())
 
         # Continue looking until we've found them all
-        num = len(sn_list)
+        num = len(mac_list)
         while len(self.tellos) < num:
             print('[Tello Search]Looking for %d Tello(s)' % (num - len(self.tellos)))
 
             # Remove any found Tellos from the list to search
-            for tello_ip in [tello.ip for tello in self.tellos]:
-                if tello_ip in possible_addr:
-                    possible_addr.remove(tello_ip)
+            for tello in self.tellos:
+                for target_mac, target_ip in ip_by_macs.items():
+                    if tello.ip == target_ip:
+                        possible_addr.remove(target_ip)
 
             # Try contacting Tello via each possible_addr
-            for ip in possible_addr:
-                self.control_socket.sendto('command'.encode(), (ip, self.control_port))
+            for target_ip in possible_addr:
+                self.control_socket.sendto('command'.encode(), (target_ip, self.control_port))
 
             # Responses to the command above will be picked up in receive_thread.  Here we check regularly to see if
             #  they've all been found, so we can break out quickly.  But after several failed attempts, go around the
@@ -92,6 +88,10 @@ class CommsManager:
 
         # Once we have all Tellos, startup a command_handler for each.  These manage the command queues for each Tello.
         for tello in self.tellos:
+            for target_mac, target_ip in ip_by_macs.items():
+                if tello.ip == target_ip:
+                    tello.num = target_mac
+
             command_handler_thread = threading.Thread(target=self._command_handler, args=(tello,))
             command_handler_thread.daemon = True
             command_handler_thread.start()
@@ -102,21 +102,6 @@ class CommsManager:
             self.status_thread = threading.Thread(target=self._status_thread)
             self.status_thread.daemon = True
             self.status_thread.start()
-
-        # Query each Tello to get its serial number - saving the cmd_id so we can match-up responses when they arrive
-        tello_cmd_id = []
-        for tello in self.tellos:
-            # Save the tello together with the returned cmd_id, so we can match the responses with the right Tello below
-            tello_cmd_id.append((tello, tello.add_to_command_queue('sn?', 'Read', None)))
-
-        # Assign the sn to each Tello, as responses become available.
-        # Note that log_wait_response will block until the response is received.
-        for tello, cmd_id in tello_cmd_id:
-            tello.sn = tello.log_wait_response(cmd_id).response
-            # Once we know the SN, look it up in the supplied sn_list and assign the correct tello_num
-            for index, sn in enumerate(sn_list, 1):
-                if tello.sn == sn:
-                    tello.num = index
 
         # Sort the list of Tellos by their num
         self.tellos.sort(key=lambda tello: tello.num)
