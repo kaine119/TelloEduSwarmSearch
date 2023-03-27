@@ -2,6 +2,7 @@ import sys
 from datetime import datetime
 from typing import List
 from scapy.all import srp, Ether, ARP, conf
+from serial_mapper import get_mac_addr_from_num
 
 # Last 3 bytes of the MAC address of each Tello.
 # Identified by the SSID printed on the
@@ -43,6 +44,7 @@ def find_ips_by_mac(test_numbers: List[int]) -> dict[str, str]:
     ips = {}
     num = 0
     print(found_clients)
+    print('test_numbers', test_numbers)
     for number, mac in zip(test_numbers, get_mac_addr_from_num(test_numbers)):
         mac = mac.lower()
         if found_clients.get(mac) is None:

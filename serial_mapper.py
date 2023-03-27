@@ -22,6 +22,8 @@ def get_mac_addr_from_num(num_arr):
     mac_arr = []
     for num in num_arr:
         mac_arr.append(serial_obj[num][1])
+    
+    print(mac_arr)
 
     return mac_arr
 
