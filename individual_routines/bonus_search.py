@@ -1,7 +1,9 @@
 from individual_routines.search import grid_search
 
 # def bonus_search_party(fly, tellos, update_status):
-def bonus_search_party(fly, tellos):
+
+
+def bonus_search_party(fly, tellos, update_status):
 
     B1, B2, B3 = tellos
 
@@ -31,12 +33,13 @@ def bonus_search_party(fly, tellos):
         fly.reorient(height=80, pad='m1', tello=B3)
 
     # B1 starts making way to bonus room
-    # B2 goes through window
+    # B2 goes through windp
     # B3 goes to window
     with fly.sync_these():
         fly.straight_from_pad(200, 400, 80, 50, 'm7', tello=B1)
         fly.straight_from_pad(0, 150, 80, 80, 'm7', tello=B2)
         fly.straight_from_pad(0, 300, 80, 50, 'm1', tello=B3)
+        update_status('bonus')
 
     # reorient
     with fly.sync_these():
