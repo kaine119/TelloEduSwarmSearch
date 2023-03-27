@@ -1,6 +1,6 @@
 import time
 import threading
-from typing import Union, Optional
+from typing import Tuple, Union, Optional
 from contextlib import contextmanager
 from comms_manager import CommsManager
 
@@ -353,7 +353,7 @@ class FlyTello:
                             tello_num=tello,
                             sync=sync)
 
-    def search_spiral(self, dist: int, spirals: int, height: int, speed: int, pad: str, tello: int) -> bool:
+    def search_spiral(self, dist: int, spirals: int, height: int, speed: int, pad: str, tello: int) -> Tuple[bool, Tuple[int, int] | None]:
         """ Shortcut method to perform a spiral search around the starting point, returning True when found.
 
             Search follows a square pattern around, enlarging after each complete revolution.  If pad is not found
@@ -410,7 +410,7 @@ class FlyTello:
 
         return self.search_pattern(pattern, dist, height, speed, pad, tello)
 
-    def search_pattern(self, pattern: list, dist: int, height: int, speed: int, pad: str, tello: int) -> bool:
+    def search_pattern(self, pattern: list[Tuple[int, int] | None], dist: int, height: int, speed: int, pad: str, tello: int) -> Tuple[bool, Tuple[int, int] | None]:
         """ Perform a search for a mission pad by following the supplied pattern, returning True when found.
 
             Pattern is usually clearest to define using relative integers, e.g. (0, 2), (-1, -1), etc.  pattern_dist
@@ -422,8 +422,13 @@ class FlyTello:
             :param speed: Flight speed, in range 10-100cm/s.
             :param pad: ID of the mission pad to search for, e.g. 'm1'-'m8', 'm-1', or 'm-2'.
             :param tello: Number of an individual Tello, i.e. 1,2,....  Doesn't support 'All'.
-            :return: Returns True when mission pad is found, and Tello is hovering directly above it.  Otherwise False.
+            :return: Returns a tuple `(found, coordinates)`:
+
+                `found` is True when mission pad is found, and Tello is hovering directly above it.  Otherwise False.
+
+                `coordinates` is the (forward, leftwards) coordinates of the mission pad if found, relative to starting position.
         """
+        final_coordinate = [0, 0]
         for x in range(0, len(pattern)):
             # Try to centre over the nearest mission pad
             cmd_ids = self.tello_mgr.queue_command('go 0 0 %d %d %s' % (height, speed, pad),
@@ -431,13 +436,19 @@ class FlyTello:
             for cmd_id in cmd_ids:
                 cmd_log = self.tello_mgr.get_tello(cmd_id[0]).log_wait_response(cmd_id[1])
                 if cmd_log.success:
-                    return True
+                    return True, tuple(final_coordinate)
                 else:
+                    current_instruction = pattern[x]
                     # If not found i.e. Tello unable to orient itself over the Mission Pad, move to next position...
-                    self.tello_mgr.queue_command('go %d %d %d %d' % (pattern[x][0] * dist,
-                                                                     pattern[x][1] * dist, 0, speed),
-                                                 'Control', tello)
-        return False
+                    if (current_instruction is None):
+                        self.reorient(height=height, pad='m-2', tello=tello)
+                    else:
+                        self.tello_mgr.queue_command('go %d %d %d %d' % (current_instruction[0] * dist,
+                                                                         current_instruction[1] * dist, 0, speed),
+                                                     'Control', tello)
+                        final_coordinate[0] += current_instruction[0] * dist
+                        final_coordinate[1] += current_instruction[1] * dist
+        return False, None
 
     #
     # MULTI-THREADING CONTROL FOR INDIVIDUAL BEHAVIOURS
