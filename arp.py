@@ -2,6 +2,7 @@ import sys
 from datetime import datetime
 from typing import List
 from scapy.all import srp, Ether, ARP, conf
+from serial_mapper import get_mac_addr_from_num
 
 from serial_mapper import get_mac_addr_from_num
 
@@ -44,6 +45,7 @@ def find_ips_by_number(test_numbers: List[int]) -> dict[str, str]:
     ips = {}
     num = 0
     print(found_clients)
+    print('test_numbers', test_numbers)
     for number, mac in zip(test_numbers, get_mac_addr_from_num(test_numbers)):
         mac = mac.lower()
         if found_clients.get(mac) is None:
