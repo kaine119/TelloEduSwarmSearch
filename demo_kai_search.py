@@ -1,6 +1,7 @@
 from typing import Tuple
 from individual_routines.search import grid_search
 from fly_tello import FlyTello
+from serial_mapper import get_mac_addr_from_num
 my_tellos = list()
 
 
@@ -11,24 +12,13 @@ my_tellos = list()
 #
 
 # Test example, should be replaced
-search_tellos: dict[str, str] = {
-    "B1": "d2:71:04"
-    # "B2": "",
-    # "B3": "",
-}
+search_tellos = get_mac_addr_from_num([10])
 
 
-def get_label_for_mac(target_mac: str):
-    for label, mac in search_tellos.items():
-        if mac == target_mac:
-            return label
-    raise RuntimeError(f"MAC not found: {target_mac}")
-
-
-with FlyTello(list(search_tellos.values())) as fly:
+with FlyTello(search_tellos) as fly:
     fly.takeoff()
     fly.reorient(height=100, pad='m-2')
     with fly.individual_behaviours():
-        fly.run_individual(grid_search, tello=search_tellos['B1'], pad='m7', fly=fly)
+        fly.run_individual(grid_search, tello=search_tellos[0], pad='m3', fly=fly, grid_width=2, grid_length=5)
     fly.reorient(height=100, pad='m-2')
     fly.land()
