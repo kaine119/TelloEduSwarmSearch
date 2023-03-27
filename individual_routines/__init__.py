@@ -5,5 +5,6 @@ __all__ = [
     "search",
     "top_search",
     "window",
-    "find_victims"
+    "find_victims",
+    "corner_search"
 ]
