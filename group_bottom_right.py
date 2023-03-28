@@ -107,7 +107,8 @@ def go_to_room(fly, tellos: List[str]):
             tello=tellos[2],
             pad='m8',
             grid_width=3,
-            grid_length=4
+            grid_length=4,
+            grid_origin_xy=(1200, 900)
         )
         fly.run_individual(
             grid_search,
@@ -115,7 +116,8 @@ def go_to_room(fly, tellos: List[str]):
             tello=tellos[1],
             pad='m8',
             grid_width=2,
-            grid_length=4
+            grid_length=4,
+            grid_origin_xy=(1500, 900)
         )
         fly.run_individual(
             grid_search,
@@ -123,7 +125,8 @@ def go_to_room(fly, tellos: List[str]):
             tello=tellos[0],
             pad='m8',
             grid_width=2,
-            grid_length=4
+            grid_length=4,
+            grid_origin_xy=(1750, 900)
         )
 
     with fly.sync_these():
@@ -150,11 +153,11 @@ def begin():
         with fly.individual_behaviours():
             fly.run_individual(
                 go_to_room, fly=fly,
-                tellos=serial_mapper.get_mac_addr_from_num(searchers))
+                tellos=serial_mapper.get_mac_addr_from_num(searchers)
+            )
             # fly.run_individual(land_immediately, tellos=serial_mapper.get_mac_addr_from_num([26, 22, 21, 20, 19]))
             # fly.run_individual(go_to_room, tellos=serial_mapper.get_mac_addr_from_num([21, 20, 19]))
 
 
 if __name__ == "__main__":
-    print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM RIGHT GROUP (THE FOOLS!!)")
     begin()
