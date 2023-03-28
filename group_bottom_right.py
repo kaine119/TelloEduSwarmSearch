@@ -2,7 +2,9 @@ from typing import List
 from fly_tello import FlyTello
 from individual_routines.search import grid_search
 import serial_mapper
-search_tellos = serial_mapper.get_mac_addr_from_num([
+from arp import all_drones_ready
+
+searchers = [
     26,
     # 25,
     # 24,
@@ -11,15 +13,17 @@ search_tellos = serial_mapper.get_mac_addr_from_num([
     # 21,
     # 20,
     # 19,
-])
+]
+
+search_tellos = serial_mapper.get_mac_addr_from_num(searchers)
 
 
-def land_immediately(tellos: List[str]):
+def land_immediately(fly, tellos: List[str]):
     for tello in tellos:
         fly.land(tello)
 
 
-def go_to_room(tellos: List[str]):
+def go_to_room(fly, tellos: List[str]):
     with fly.sync_these():
         fly.straight_from_pad(300, 0, 80, 50, 'm-2', tello=tellos[2])
         fly.straight_from_pad(100, 0, 80, 50, 'm-2', tello=tellos[1])
@@ -132,11 +136,23 @@ def go_to_room(tellos: List[str]):
         fly.land(tello=tellos[0])
 
 
-with FlyTello(search_tellos) as fly:
-    fly.set_top_led()
-    fly.takeoff()
-    fly.reorient(height=100, pad='m-2')
-    with fly.individual_behaviours():
-        fly.run_individual(land_immediately, tellos=serial_mapper.get_mac_addr_from_num([26]))
-        # fly.run_individual(land_immediately, tellos=serial_mapper.get_mac_addr_from_num([26, 22, 21, 20, 19]))
-        # fly.run_individual(go_to_room, tellos=serial_mapper.get_mac_addr_from_num([21, 20, 19]))
+def begin():
+    with FlyTello(search_tellos) as fly:
+        fly.set_top_led()
+        fly.takeoff()
+        fly.reorient(height=100, pad='m-2')
+        with fly.individual_behaviours():
+            fly.run_individual(
+                go_to_room, fly=fly,
+                tellos=serial_mapper.get_mac_addr_from_num(searchers))
+            # fly.run_individual(land_immediately, tellos=serial_mapper.get_mac_addr_from_num([26, 22, 21, 20, 19]))
+            # fly.run_individual(go_to_room, tellos=serial_mapper.get_mac_addr_from_num([21, 20, 19]))
+
+
+if __name__ == "__main__":
+    resp = ""
+    if all_drones_ready(search_tellos, mode=1):
+        resp = input(f"ALL {len(search_tellos)} DRONES READY. START? (Y/N)")
+    if resp.lower() == "y":
+        print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM RIGHT GROUP (THE FOOLS!!)")
+        begin()

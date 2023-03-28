@@ -1,4 +1,4 @@
-from constants import *
+from individual_routines.constants import *
 
 
 def landers_full_send(fly, tellos):

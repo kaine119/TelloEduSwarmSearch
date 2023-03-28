@@ -1,5 +1,5 @@
 from individual_routines.search import *
-from constants import *
+from individual_routines.constants import *
 
 
 def top_search_party(fly, tellos, update_status, get_status):

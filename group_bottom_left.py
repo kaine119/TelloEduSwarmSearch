@@ -31,7 +31,7 @@ def begin():
 
 if __name__ == "__main__":
     resp = ""
-    if all_drones_ready(my_tellos, mode=0):
+    if all_drones_ready(my_tellos, mode=2):
         resp = input(f"ALL {len(my_tellos)} DRONES READY. START? (Y/N)")
     if resp.lower() == "y":
         print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM LEFT GROUP (THE LANDERS!!)")

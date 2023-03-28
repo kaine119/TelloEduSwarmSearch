@@ -1,4 +1,4 @@
-from constants import *
+from individual_routines.constants import *
 
 
 def corner_search_party(fly, tellos, update_status):
