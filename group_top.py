@@ -7,8 +7,8 @@ from individual_routines.landers import *
 from status_manager import *
 from arp import all_drones_ready
 
-bonus = [6, 5, 10]
-back = [3, 2, 8]
+back = [1, 2, 3]
+bonus = [4, 5, 6]
 
 my_tellos = bonus + back
 
@@ -38,7 +38,7 @@ def begin():
 
 if __name__ == "__main__":
     resp = ""
-    if all_drones_ready(my_tellos):
+    if all_drones_ready(my_tellos, mode=0):
         resp = input(f"ALL {len(my_tellos)} DRONES READY. START? (Y/N)")
     if resp.lower() == "y":
         print("LET'S GOOOOOOOO. I'M STARTING THE TOP GROUP (AT THE BACK!!!)")

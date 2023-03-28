@@ -18,11 +18,11 @@ test_macs = [
 ]
 
 
-def find_ips_by_mac(target_macs: List[str]) -> dict[str, str]:
+def find_ips_by_mac(target_macs: List[str], mode=0) -> dict[str, str]:
     """
     Returns a map of MAC addresses to IPs.
     """
-    found_clients = arp_scan()
+    found_clients = arp_scan(mode)
     ips = {}
     num = 0
     print(found_clients)
@@ -37,11 +37,11 @@ def find_ips_by_mac(target_macs: List[str]) -> dict[str, str]:
     return ips
 
 
-def find_ips_by_number(test_numbers: List[int]) -> dict[str, str]:
+def find_ips_by_number(test_numbers: List[int], mode=0) -> dict[str, str]:
     """
     Returns a map of MAC addresses to IPs.
     """
-    found_clients = arp_scan()
+    found_clients = arp_scan(mode)
     ips = {}
     num = 0
     print(found_clients)
@@ -57,8 +57,8 @@ def find_ips_by_number(test_numbers: List[int]) -> dict[str, str]:
     return ips
 
 
-def all_drones_ready(test_numbers: List[int]) -> bool:
-    found_clients = arp_scan()
+def all_drones_ready(test_numbers: List[int], mode=0) -> bool:
+    found_clients = arp_scan(mode)
     ips = {}
     num = 0
     print(found_clients)
@@ -73,7 +73,13 @@ def all_drones_ready(test_numbers: List[int]) -> bool:
     return num == 0
 
 
-def arp_scan():
+def arp_scan(mode=0):
+    if mode == 0:
+        target_ip = "192.168.50.1/24"
+    elif mode == 1:
+        target_ip = "192.168.0.1/24"
+    elif mode == 2:
+        target_ip = "192.168.69.1/24"
     target_ip = "192.168.50.1/24"
     arp = ARP(pdst=target_ip)
     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
