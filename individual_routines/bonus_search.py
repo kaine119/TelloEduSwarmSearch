@@ -35,7 +35,7 @@ def bonus_search_party(fly, tellos, update_status):
     # B2 goes through window
     # B3 goes to window
     with fly.sync_these():
-        fly.straight_from_pad(200, 400, 80, 50, WINDOW, tello=B1)
+        fly.straight_from_pad(200, 500, 80, 50, WINDOW, tello=B1)
         fly.straight_from_pad(0, 150, 80, 80, WINDOW, tello=B2)
         fly.straight_from_pad(0, 300, 80, 50, 'm1', tello=B3)
         update_status('bonus')
@@ -51,7 +51,7 @@ def bonus_search_party(fly, tellos, update_status):
     # B3 goes through window
     with fly.sync_these():
         fly.straight_from_pad(0, 300, 80, 50, 'm-2', tello=B1)
-        fly.straight_from_pad(200, 400, 80, 50, WINDOW, tello=B2)
+        fly.straight_from_pad(200, 500, 80, 50, WINDOW, tello=B2)
         fly.straight_from_pad(0, 150, 80, 80, WINDOW, tello=B3)
 
     # reorient
@@ -66,7 +66,7 @@ def bonus_search_party(fly, tellos, update_status):
     with fly.sync_these():
         fly.straight_from_pad(0, 250, 80, 50, 'm-2', tello=B1)
         fly.straight_from_pad(0, 300, 80, 50, 'm-2', tello=B2)
-        fly.straight_from_pad(200, 400, 80, 50, WINDOW, tello=B3)
+        fly.straight_from_pad(200, 500, 80, 50, WINDOW, tello=B3)
 
     # reorient
     with fly.sync_these():

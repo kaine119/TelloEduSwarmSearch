@@ -61,6 +61,7 @@ class CommsManager:
         # Create a list of possible IP addresses to search
         # Run an ARP scan to grab IP-MAC associations.
         ip_by_macs = find_ips_by_mac(target_macs=mac_list)
+        input('Ready to fly? Press enter to continue')
         possible_addr = list(ip_by_macs.values())
 
         # Continue looking until we've found them all
