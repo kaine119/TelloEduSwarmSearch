@@ -17,7 +17,7 @@ my_tellos = bonus + back
 
 
 def begin():
-    with FlyTello(my_tellos) as fly:
+    with FlyTello(get_mac_addr_from_num(my_tellos)) as fly:
         fly.set_top_led()
         fly.pad_detection_on()
         fly.set_pad_detection(direction='downward')

@@ -4,8 +4,6 @@ from typing import List
 from scapy.all import srp, Ether, ARP, conf
 from serial_mapper import get_mac_addr_from_num
 
-from serial_mapper import get_mac_addr_from_num
-
 # Last 3 bytes of the MAC address of each Tello.
 # Identified by the SSID printed on the
 # back of the head unit (RMTT-______)

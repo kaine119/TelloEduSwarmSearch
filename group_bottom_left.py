@@ -4,9 +4,9 @@ from individual_routines.landers import *
 # from status_manager import *
 from arp import all_drones_ready
 
-landers = []
+landers = [7, 8, 10, 11, 12, 16, 17]
 
-my_tellos = landers
+my_tellos = get_mac_addr_from_num(landers)
 
 
 def begin():
@@ -29,8 +29,8 @@ def begin():
 
 if __name__ == "__main__":
     resp = ""
-    if all_drones_ready(my_tellos, mode=2):
-        resp = input(f"ALL {len(my_tellos)} DRONES READY. START? (Y/N)")
+    if all_drones_ready(landers, mode=2):
+        resp = input(f"ALL {len(landers)} DRONES READY. START? (Y/N)")
     if resp.lower() == "y":
         print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM LEFT GROUP (THE LANDERS!!)")
         begin()

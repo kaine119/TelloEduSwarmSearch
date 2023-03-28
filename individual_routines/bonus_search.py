@@ -1,5 +1,5 @@
 from individual_routines.search import grid_search
-from constants import *
+from individual_routines.constants import *
 
 
 def bonus_search_party(fly, tellos, update_status):

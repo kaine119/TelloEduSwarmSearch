@@ -4,7 +4,7 @@ from individual_routines.constants import *
 def landers_full_send(fly, tellos):
     with fly.sync_these():
         for tello in tellos:
-            fly.straight_from_pad(400, 0, 80, 80, NEAREST, tello=tello)
+            fly.straight_from_pad(400, 0, 80, 100, NEAREST, tello=tello)
 
     with fly.sync_these():
         for tello in tellos:
@@ -12,7 +12,7 @@ def landers_full_send(fly, tellos):
 
     with fly.sync_these():
         for tello in tellos:
-            fly.straight_from_pad(450, 0, 80, 80, NEAREST, tello=tello)
+            fly.straight_from_pad(450, 0, 80, 100, NEAREST, tello=tello)
 
     with fly.sync_these():
         for tello in tellos:
