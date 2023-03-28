@@ -328,6 +328,10 @@ class FlyTello:
         """ Read the Serial Number of the Tello(s) """
         self._command('sn?', 'Read', tello, sync)
 
+    def set_top_led(self, tello: Union[str, int]='All', sync: bool=False) -> None:
+        """Set the top LED of the Tello(s)"""
+        self._command('EXT led br 1 255 0 0', 'Set', tello, sync)
+
     #
     # TELLO SDK V2.0 EXTENDED & COMPOSITE COMMANDS
     #
