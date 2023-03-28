@@ -21,14 +21,24 @@ def land_immediately(tellos: List[str]):
 
 def go_to_room(tellos: List[str]):
     with fly.sync_these():
-        fly.straight_from_pad(360, 0, 80, 50, 'm-2', tello=tellos[2])
-        fly.straight_from_pad(360, 0, 80, 50, 'm-2', tello=tellos[1])
-        fly.straight_from_pad(360, 0, 80, 50, 'm-2', tello=tellos[0])
+        fly.straight_from_pad(300, 0, 80, 50, 'm-2', tello=tellos[2])
+        fly.straight_from_pad(300, 0, 80, 50, 'm-2', tello=tellos[1])
+        fly.straight_from_pad(300, 0, 80, 50, 'm-2', tello=tellos[0])
 
     with fly.sync_these():
         fly.reorient(80, 'm-2', tello=tellos[2])
         fly.reorient(80, 'm-2', tello=tellos[1])
         fly.reorient(80, 'm-2', tello=tellos[0])
+
+    with fly.sync_these():
+        fly.straight_from_pad(250, 0, 80, 50, 'm-2', tello=tellos[2])
+        fly.straight_from_pad(250, 0, 80, 50, 'm-2', tello=tellos[1])
+        fly.straight_from_pad(250, 0, 80, 50, 'm-2', tello=tellos[0])
+
+    with fly.sync_these():
+        fly.reorient(80, 'm1', tello=tellos[2])
+        fly.reorient(80, 'm1', tello=tellos[1])
+        fly.reorient(80, 'm7', tello=tellos[0])
 
     with fly.sync_these():
         fly.straight_from_pad(400, 0, 80, 50, 'm-2', tello=tellos[2])
@@ -38,22 +48,45 @@ def go_to_room(tellos: List[str]):
     with fly.sync_these():
         fly.reorient(80, 'm1', tello=tellos[2])
         fly.reorient(80, 'm1', tello=tellos[1])
-        fly.reorient(80, 'm7', tello=tellos[0])
+        fly.reorient(80, 'm1', tello=tellos[0])
 
     with fly.sync_these():
-        fly.straight_from_pad(0, 150, 75, 100, "m7", tello=tellos[2])
+        # localise [2] to pad
+        fly.straight_from_pad(0, 450, 80, 50, 'm1', tello=tellos[2])
+
+        # move the rest one pad left
+        fly.straight_from_pad(0, 100, 80, 50, 'm1', tello=tellos[1])
+        fly.straight_from_pad(0, 100, 80, 50, 'm1', tello=tellos[0])
+
+    with fly.sync_these():
+        # sideways into window
+        fly.straight_from_pad(0, 300, 75, 100, "m7", tello=tellos[2])
+
+        # localise [1] to pad
         fly.straight_from_pad(0, 100, 75, 100, "m1", tello=tellos[1])
+
+        # move the last one ot the left
         fly.straight_from_pad(0, 100, 75, 100, "m1", tello=tellos[0])
 
     with fly.sync_these():
-        fly.straight_from_pad(-200, 0, 75, 100, "m7", tello=tellos[2])
-        fly.straight_from_pad(0, 150, 75, 100, "m7", tello=tellos[1])
-        fly.straight_from_pad(0, 100, 75, 100, "m1", tello=tellos[0])
+        # move [2] down to search points
+        fly.straight_from_pad(-170, 0, 75, 100, "m7", tello=tellos[2])
+
+        # move [1] through the window
+        fly.straight_from_pad(0, 100, 75, 100, "m7", tello=tellos[1])
+
+        # move [0] to the window pad
+        fly.straight_from_pad(0, 450, 75, 100, "m1", tello=tellos[0])
 
     with fly.sync_these():
-        fly.straight_from_pad(-200, 0, 75, 100, "m1", tello=tellos[2])
-        fly.straight_from_pad(-200, 0, 75, 100, "m7", tello=tellos[1])
-        fly.straight_from_pad(0, 150, 75, 100, "m7", tello=tellos[0])
+        # move [2] down to final search pad
+        fly.straight_from_pad(-325, 0, 75, 100, "m1", tello=tellos[2])
+
+        # move [1] to the first search pad
+        fly.straight_from_pad(-170, 0, 75, 100, "m7", tello=tellos[1])
+
+        # move [0] through the window
+        fly.straight_from_pad(0, 100, 75, 100, "m7", tello=tellos[0])
 
     with fly.sync_these():
         fly.reorient(80, 'm-2', tello=tellos[2])
