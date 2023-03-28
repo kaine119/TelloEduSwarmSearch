@@ -4,7 +4,6 @@ from individual_routines.landers import *
 # from status_manager import *
 from arp import all_drones_ready
 
-# Edit this with the drones we're sending to land
 landers = []
 
 my_tellos = landers

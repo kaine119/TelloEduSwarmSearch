@@ -4,6 +4,7 @@ from individual_routines.search import grid_search
 import serial_mapper
 from arp import all_drones_ready
 
+# 1st drone is front most (closest to bottom)
 searchers = [
     26,
     # 25,

@@ -7,7 +7,10 @@ from individual_routines.landers import *
 from status_manager import *
 from arp import all_drones_ready
 
+# 1st entry is closest to window
 back = [1, 2, 3]
+
+# 1st entry is closest to window
 bonus = [4, 5, 6]
 
 my_tellos = bonus + back
