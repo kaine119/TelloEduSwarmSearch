@@ -24,7 +24,8 @@ class CommsManager:
 
         # Socket for primary bi-directional communication with Tello
         self.control_port = 8889
-        self.control_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # socket for sending cmd
+        self.control_socket = socket.socket(
+            socket.AF_INET, socket.SOCK_DGRAM)  # socket for sending cmd
         self.control_socket.bind(('', self.control_port))
 
         # Socket for receiving status messages from Tello - not activated here
@@ -61,12 +62,14 @@ class CommsManager:
         # Create a list of possible IP addresses to search
         # Run an ARP scan to grab IP-MAC associations.
         ip_by_macs = find_ips_by_mac(target_macs=mac_list)
+        input()
         possible_addr = list(ip_by_macs.values())
 
         # Continue looking until we've found them all
         num = len(mac_list)
         while len(self.tellos) < num:
-            print('[Tello Search]Looking for %d Tello(s)' % (num - len(self.tellos)))
+            print('[Tello Search]Looking for %d Tello(s)' %
+                  (num - len(self.tellos)))
 
             # Remove any found Tellos from the list to search
             for tello in self.tellos:
@@ -76,7 +79,8 @@ class CommsManager:
 
             # Try contacting Tello via each possible_addr
             for target_ip in possible_addr:
-                self.control_socket.sendto('command'.encode(), (target_ip, self.control_port))
+                self.control_socket.sendto(
+                    'command'.encode(), (target_ip, self.control_port))
 
             # Responses to the command above will be picked up in receive_thread.  Here we check regularly to see if
             #  they've all been found, so we can break out quickly.  But after several failed attempts, go around the
@@ -92,7 +96,8 @@ class CommsManager:
                 if tello.ip == target_ip:
                     tello.num = target_mac
 
-            command_handler_thread = threading.Thread(target=self._command_handler, args=(tello,))
+            command_handler_thread = threading.Thread(
+                target=self._command_handler, args=(tello,))
             command_handler_thread.daemon = True
             command_handler_thread.start()
 
@@ -127,12 +132,14 @@ class CommsManager:
         if tello_num == 'All':
             for tello in self.tellos:
                 # If command is for all tellos, send to each and save the cmd_id in a list
-                cmd_id = tello.add_to_command_queue(command, command_type, on_error)
+                cmd_id = tello.add_to_command_queue(
+                    command, command_type, on_error)
                 if cmd_id != -1:
                     cmd_ids.append((tello.num, cmd_id))
         else:
             tello = self.get_tello(num=tello_num)
-            cmd_id = tello.add_to_command_queue(command, command_type, on_error)
+            cmd_id = tello.add_to_command_queue(
+                command, command_type, on_error)
             if cmd_id != -1:
                 cmd_ids.append((tello.num, cmd_id))
         return cmd_ids
@@ -221,7 +228,8 @@ class CommsManager:
         log_entry = tello.add_to_log(cmd_id, command, command_type, on_error)
 
         # Then send the command
-        self.control_socket.sendto(command.encode(), (tello.ip, self.control_port))
+        self.control_socket.sendto(
+            command.encode(), (tello.ip, self.control_port))
         print('[Command  %s]Sent cmd: %s' % (tello.ip, command))
 
         # Wait until a response has been received, and handle timeout
@@ -233,8 +241,10 @@ class CommsManager:
                 log_entry.success = False
                 log_entry.response = ''
                 if log_entry.on_error is not None:
-                    tello.add_to_command_queue(log_entry.on_error, log_entry.command_type, None)
-                    print('[Command  %s]Queuing alternative cmd: %s' % (tello.ip, log_entry.on_error))
+                    tello.add_to_command_queue(
+                        log_entry.on_error, log_entry.command_type, None)
+                    print('[Command  %s]Queuing alternative cmd: %s' %
+                          (tello.ip, log_entry.on_error))
                 return
             # Sleep briefly at the end of each loop, to prevent excessive CPU usage
             time.sleep(0.01)
@@ -260,7 +270,8 @@ class CommsManager:
             # Pop command off the Tello's queue, then send the command.
             # Note as part of send_command the same details will be added back into Tello's log.
             command = tello.command_queue.pop(0)
-            self._send_command(tello, command.cmd_id, command.command, command.command_type, command.on_error)
+            self._send_command(tello, command.cmd_id, command.command,
+                               command.command_type, command.on_error)
 
     def _receive_thread(self):
         """ Listen continually to responses from the Tello - should run in its own thread.
@@ -303,15 +314,18 @@ class CommsManager:
                     # Assume Read commands are always successful... not aware they can return anything else!?
                     log_entry.success = True
                 else:
-                    print('[Response %s]Invalid command_type: %s' % (ip, log_entry.command_type))
+                    print('[Response %s]Invalid command_type: %s' %
+                          (ip, log_entry.command_type))
                 # Save .response *after* .success, as elsewhere we use .response as a check to move on - avoids race
                 # conditions across the other running threads, which might otherwise try to use .success before saved.
                 log_entry.response = response
                 print('[Response %s]Received: %s' % (ip, response))
                 # If required, queue the alternative command - assume same command type as the original.
                 if send_on_error:
-                    tello.add_to_command_queue(log_entry.on_error, log_entry.command_type, None)
-                    print('[Command  %s]Queuing alternative cmd: %s' % (ip, log_entry.on_error))
+                    tello.add_to_command_queue(
+                        log_entry.on_error, log_entry.command_type, None)
+                    print('[Command  %s]Queuing alternative cmd: %s' %
+                          (ip, log_entry.on_error))
 
             except socket.error as exc:
                 if not self.terminate_comms:

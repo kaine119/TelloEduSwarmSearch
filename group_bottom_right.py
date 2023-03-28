@@ -156,9 +156,5 @@ def begin():
 
 
 if __name__ == "__main__":
-    resp = ""
-    if all_drones_ready(search_tellos, mode=1):
-        resp = input(f"ALL {len(search_tellos)} DRONES READY. START? (Y/N)")
-    if resp.lower() == "y":
-        print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM RIGHT GROUP (THE FOOLS!!)")
-        begin()
+    print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM RIGHT GROUP (THE FOOLS!!)")
+    begin()

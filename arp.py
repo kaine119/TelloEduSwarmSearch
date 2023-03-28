@@ -72,13 +72,11 @@ def all_drones_ready(test_numbers: List[int], mode=0) -> bool:
 
 
 def arp_scan(mode=0):
-    if mode == 0:
-        target_ip = "192.168.50.1/24"
-    elif mode == 1:
+    target_ip = "192.168.50.1/24"
+    if mode == 1:
         target_ip = "192.168.0.1/24"
     elif mode == 2:
         target_ip = "192.168.69.1/24"
-    target_ip = "192.168.50.1/24"
     arp = ARP(pdst=target_ip)
     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
     packet = ether/arp

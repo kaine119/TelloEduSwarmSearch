@@ -28,9 +28,5 @@ def begin():
 
 
 if __name__ == "__main__":
-    resp = ""
-    if all_drones_ready(landers, mode=2):
-        resp = input(f"ALL {len(landers)} DRONES READY. START? (Y/N)")
-    if resp.lower() == "y":
-        print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM LEFT GROUP (THE LANDERS!!)")
-        begin()
+    print("LET'S GOOOOOOOO. I'M STARTING THE BOTTOM LEFT GROUP (THE LANDERS!!)")
+    begin()
