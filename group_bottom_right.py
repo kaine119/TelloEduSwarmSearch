@@ -139,8 +139,13 @@ def go_to_room(fly, tellos: List[str]):
 def begin():
     with FlyTello(search_tellos) as fly:
         fly.set_top_led()
+        fly.pad_detection_on()
+        fly.set_pad_detection(direction='downward')
         fly.takeoff()
-        fly.reorient(height=100, pad='m-2')
+
+        with fly.sync_these():
+            fly.reorient(height=80, pad="m-2", tello='All')
+
         with fly.individual_behaviours():
             fly.run_individual(
                 go_to_room, fly=fly,

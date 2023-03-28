@@ -12,6 +12,7 @@ my_tellos = landers
 
 def begin():
     with FlyTello(my_tellos) as fly:
+        fly.set_top_led()
         fly.pad_detection_on()
         fly.set_pad_detection(direction='downward')
         fly.takeoff()
