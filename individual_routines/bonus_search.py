@@ -33,7 +33,7 @@ def bonus_search_party(fly, tellos, update_status):
         fly.reorient(height=80, pad='m1', tello=B3)
 
     # B1 starts making way to bonus room
-    # B2 goes through windp
+    # B2 goes through window
     # B3 goes to window
     with fly.sync_these():
         fly.straight_from_pad(200, 400, 80, 50, 'm7', tello=B1)
@@ -131,7 +131,6 @@ def bonus_search_party(fly, tellos, update_status):
         fly.reorient(height=80, pad='m-2', tello=B2)
         fly.reorient(height=80, pad='m-2', tello=B3)
 
-    with fly.sync_these():
-        grid_search(B1, 'm8', fly, 2, 3)
-        grid_search(B2, 'm8', fly, 3, 3)
-        grid_search(B3, 'm8', fly, 2, 3)
+    # initiate search
+
+    # return if not found

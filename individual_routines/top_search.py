@@ -1,80 +1,100 @@
-def idle(fly, tellos, update_status):
-    B1, B2, B3 = tellos
-    with fly.sync_these():
-        fly.straight_from_pad(100, 0, 80, 50, 'm1', tello=B1)
-        fly.straight_from_pad(100, 0, 80, 50, 'm1', tello=B2)
-        fly.straight_from_pad(100, 0, 80, 50, 'm1', tello=B3)
-
-    update_status("bonus")
-
-    with fly.sync_these():
-        fly.flight_complete(tello=tellos)
+from individual_routines.search import *
+from constants import *
 
 
-def move_front(fly, tellos, update_status, get_status):
-    B1, B2, B3 = tellos
+def top_search_party(fly, tellos, update_status, get_status):
+    R1, R2, R3 = tellos
     while not get_status("bonus_vacated"):
         with fly.sync_these():
-            fly.reorient(height=80, pad='m-2', tello=B1)
-            fly.reorient(height=80, pad='m-2', tello=B2)
-            fly.reorient(height=80, pad='m-2', tello=B3)
+            fly.reorient(height=80, pad=NEAREST, tello=R1)
+            fly.reorient(height=80, pad=NEAREST, tello=R2)
+            fly.reorient(height=80, pad=NEAREST, tello=R3)
 
     with fly.sync_these():
-        fly.straight_from_pad(100, 0, 80, 50, 'm1', tello=B1)
-        fly.straight_from_pad(100, 0, 80, 50, 'm1', tello=B2)
-        fly.straight_from_pad(100, 0, 80, 50, 'm1', tello=B3)
+        fly.straight_from_pad(100, 0, 80, 50, NEAREST, tello=R1)
+        fly.straight_from_pad(100, 0, 80, 50, NEAREST, tello=R2)
+        fly.straight_from_pad(100, 0, 80, 50, NEAREST, tello=R3)
 
-    # B1 goes to window
     with fly.sync_these():
-        fly.straight_from_pad(0, 250, 80, 50, 'm1', tello=B1)
-        fly.straight_from_pad(0, 100, 80, 50, 'm1', tello=B2)
-        fly.straight_from_pad(0, 100, 80, 50, 'm1', tello=B3)
+        fly.reorient(height=80, pad=NEAREST, tello=R1)
+        fly.reorient(height=80, pad=NEAREST, tello=R2)
+        fly.reorient(height=80, pad=NEAREST, tello=R3)
 
-    # reorient
+    # R1 goes to window
     with fly.sync_these():
-        fly.reorient(height=80, pad='m7', tello=B1)
-        fly.reorient(height=80, pad='m1', tello=B2)
-        fly.reorient(height=80, pad='m1', tello=B3)
-
-    # B1 goes through window
-    # B2 goes to window
-    with fly.sync_these():
-        fly.straight_from_pad(0, 150, 80, 80, 'm7', tello=B1)
-        fly.straight_from_pad(0, 250, 80, 50, 'm1', tello=B2)
-        fly.straight_from_pad(0, 100, 80, 50, 'm1', tello=B3)
+        fly.straight_from_pad(0, 300, 80, 50, WINDOW, tello=R1)
+        fly.straight_from_pad(0, 100, 80, 50, NEAREST, tello=R2)
+        fly.straight_from_pad(0, 100, 80, 50, NEAREST, tello=R3)
 
     # reorient
     with fly.sync_these():
-        fly.reorient(height=80, pad='m7', tello=B1)
-        fly.reorient(height=80, pad='m7', tello=B2)
-        fly.reorient(height=80, pad='m1', tello=B3)
+        fly.reorient(height=80, pad=WINDOW, tello=R1)
+        fly.reorient(height=80, pad=NEAREST, tello=R2)
+        fly.reorient(height=80, pad=NEAREST, tello=R3)
 
-    # B1 starts making way to bonus room
-    # B2 goes through window
-    # B3 goes to window
+    # R1 goes through window
+    # R2 goes to window
     with fly.sync_these():
-        fly.straight_from_pad(200, 0, 80, 50, 'm7', tello=B1)
-        fly.straight_from_pad(0, 150, 80, 80, 'm7', tello=B2)
-        fly.straight_from_pad(0, 250, 80, 50, 'm1', tello=B3)
-        update_status('bonus')  # update that bonus party has left take off pad
+        fly.straight_from_pad(0, 150, 80, 80, WINDOW, tello=R1)
+        fly.straight_from_pad(0, 300, 80, 50, NEAREST, tello=R2)
+        fly.straight_from_pad(0, 100, 80, 50, NEAREST, tello=R3)
 
-    # B1 starts making way to bonus room
-    # B2 goes through window
-    # B3 goes to window
+    # reorient
     with fly.sync_these():
-        fly.straight_from_pad(200, 0, 80, 80, 'm7', tello=B1)
-        fly.straight_from_pad(0, 150, 80, 80, 'm7', tello=B2)
-        fly.straight_from_pad(0, 250, 80, 50, 'm1', tello=B3)
-        update_status('bonus')  # update that bonus party has left take off pad
+        fly.reorient(height=80, pad=WINDOW, tello=R1)
+        fly.reorient(height=80, pad=WINDOW, tello=R2)
+        fly.reorient(height=80, pad=NEAREST, tello=R3)
 
+    # R1 goes top
+    # R2 goes through window
+    # R3 goes to window
     with fly.sync_these():
-        fly.straight_from_pad(0, 150, 80, 80, 'm7', tello=B2)
-        fly.straight_from_pad(0, 250, 80, 50, 'm1', tello=B3)
-        fly.flight_complete(tello=B1)
+        fly.straight_from_pad(-200, 0, 80, 80, NEAREST, tello=R1)
+        fly.straight_from_pad(0, 150, 80, 80, WINDOW, tello=R2)
+        fly.straight_from_pad(0, 300, 80, 50, WINDOW, tello=R3)
 
+    # reorient
     with fly.sync_these():
-        fly.straight_from_pad(0, 150, 80, 80, 'm7', tello=B3)
-        fly.flight_complete(tello=B2)
+        fly.reorient(height=80, pad=NEAREST, tello=R1)
+        fly.reorient(height=80, pad=WINDOW, tello=R2)
+        fly.reorient(height=80, pad=WINDOW, tello=R3)
 
+    # R1 idles
+    # R2 goes bottom
+    # R3 goes through window
     with fly.sync_these():
-        fly.flight_complete(tello=B3)
+        fly.reorient(height=80, pad=NEAREST, tello=R1)
+        fly.straight_from_pad(300, 0, 80, 80, NEAREST, tello=R2)
+        fly.straight_from_pad(0, 150, 80, 80, WINDOW, tello=R3)
+
+    # reorient
+    with fly.sync_these():
+        fly.reorient(height=80, pad=NEAREST, tello=R1)
+        fly.reorient(height=80, pad=NEAREST, tello=R2)
+        fly.reorient(height=80, pad=WINDOW, tello=R3)
+
+    with fly.individual_behaviours():
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=R1,
+            pad=END,
+            grid_width=2,
+            grid_length=4
+        )
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=R2,
+            pad=END,
+            grid_width=3,
+            grid_length=4
+        )
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=R3,
+            pad=END,
+            grid_width=2,
+            grid_length=4
+        )

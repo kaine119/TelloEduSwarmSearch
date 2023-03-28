@@ -6,5 +6,6 @@ __all__ = [
     "top_search",
     "window",
     "find_victims",
-    "corner_search"
+    "corner_search",
+    "constants"
 ]
