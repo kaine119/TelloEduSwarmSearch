@@ -4,8 +4,6 @@ __all__ = [
     "landers",
     "search",
     "top_search",
-    "window",
-    "find_victims",
     "corner_search",
     "constants"
 ]
