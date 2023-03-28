@@ -57,6 +57,22 @@ def find_ips_by_number(test_numbers: List[int]) -> dict[str, str]:
     return ips
 
 
+def all_drones_ready(test_numbers: List[int]) -> bool:
+    found_clients = arp_scan()
+    ips = {}
+    num = 0
+    print(found_clients)
+    print('test_numbers', test_numbers)
+    for number, mac in zip(test_numbers, get_mac_addr_from_num(test_numbers)):
+        mac = mac.lower()
+        if found_clients.get(mac) is None:
+            num += 1
+            print(f"Drone not found: {number}")
+        else:
+            ips[mac] = found_clients[mac]
+    return num == 0
+
+
 def arp_scan():
     target_ip = "192.168.50.1/24"
     arp = ARP(pdst=target_ip)

@@ -131,5 +131,30 @@ def bonus_search_party(fly, tellos, update_status):
         fly.reorient(height=80, pad='m-2', tello=B3)
 
     # initiate search
+    with fly.individual_behaviours():
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=B3,
+            pad='m8',
+            grid_width=3,
+            grid_length=4
+        )
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=B2,
+            pad='m8',
+            grid_width=3,
+            grid_length=4
+        )
+        fly.run_individual(
+            grid_search,
+            fly=fly,
+            tello=B1,
+            pad='m8',
+            grid_width=2,
+            grid_length=4
+        )
 
     # return if not found

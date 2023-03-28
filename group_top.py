@@ -5,13 +5,15 @@ from individual_routines.bonus_search import *
 from individual_routines.top_search import *
 from individual_routines.landers import *
 from status_manager import *
+from arp import all_drones_ready
 
 bonus = [6, 5, 10]
 back = [3, 2, 8]
 
 my_tellos = bonus + back
 
-if __name__ == "__main__":
+
+def begin():
     with FlyTello(my_tellos) as fly:
         fly.pad_detection_on()
         fly.set_pad_detection(direction='downward')
@@ -32,3 +34,12 @@ if __name__ == "__main__":
                                get_status=get_status)
 
         fly.land()
+
+
+if __name__ == "__main__":
+    resp = ""
+    if all_drones_ready(my_tellos):
+        resp = input(f"ALL {len(my_tellos)} DRONES READY. START? (Y/N)")
+    if resp.lower() == "y":
+        print("LET'S GOOOOOOOO. I'M STARTING THE TOP GROUP (AT THE BACK!!!)")
+        begin()
