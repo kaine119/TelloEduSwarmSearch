@@ -21,7 +21,7 @@ def generate_grid(length, width):
     return res
 
 
-def grid_search(fly, tello, pad, grid_length, grid_width):
+def grid_search(fly, tello, pad, grid_length, grid_width, grid_origin_xy = (0,0)):
     """
     Perform a grid search independently. Should be executed in a separate thread with
     `fly.run_individual`.
@@ -41,9 +41,12 @@ def grid_search(fly, tello, pad, grid_length, grid_width):
         tello=tello
     )
     if found:
-        print(f"[Grid Search] Unit #{get_number_from_mac_addr(tello)} found a victim at {coordinates}")
         fly.reorient(height=100, pad='m-2')
         fly.land(tello=tello)
+        origin_x, origin_y = grid_origin_xy
+        found_x, found_y = coordinates
+        final_coordinates = (origin_x + found_x, origin_y + found_y)
+        print(f"[Grid Search] Unit #{get_number_from_mac_addr(tello)} found a victim at {final_coordinates}")
     else:
         print('[Grid Search] Bopes, going back home')
         fly.straight(
