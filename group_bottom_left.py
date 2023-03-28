@@ -1,7 +1,7 @@
 from fly_tello import FlyTello
 from serial_mapper import get_mac_addr_from_num
 from individual_routines.landers import *
-from status_manager import *
+# from status_manager import *
 from arp import all_drones_ready
 
 # Edit this with the drones we're sending to land
@@ -22,9 +22,7 @@ def begin():
         with fly.individual_behaviours():
             fly.run_individual(landers_full_send,
                                fly=fly,
-                               tellos=get_mac_addr_from_num(landers),
-                               update_status=update_status,
-                               get_status=get_status)
+                               tellos=get_mac_addr_from_num(landers))
 
         fly.land()
 
